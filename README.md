@@ -59,7 +59,7 @@ The cancel entry button can be used to cancel the last operand entered. It does 
 
 <table>
   <tr>
-    <td colspan="9">A</td>
+    <td colspan="9" align="center">A</td>
   </tr>
   <tr>
     <td align="center">User Interface Object</td>
@@ -95,9 +95,3 @@ The cancel entry button can be used to cancel the last operand entered. It does 
     <td>e</td>
   </tr>
 </table>
-
-
-|                        A               |
-| ---------------------- | ------------- |
-| User Interface Object  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-| Content Cell  | Content Cell  |
