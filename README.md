@@ -28,3 +28,11 @@ After entering the second operant, the equals button can be clicked and the resu
 This is a simplistic view of the calculator.
 
 ![screen shot 2017-09-20 at 15 32 17](https://user-images.githubusercontent.com/1120870/30649744-ff6a2170-9e18-11e7-98f9-f604ce6b5d41.png)
+
+The statechart needs to be extended to take into account negative numbers, dividing by zero, the Cancel button, the Cancel Entry button and the percent button.
+
+The statechart above assumes that the operands are positive numbers. It is possible that a user may enter a negative number number before starting to enter either operands, by clicking the minus button. When the minus button is clicked before an operand is entered, the Readout field should be made to show a minus sign.
+
+After the minus sign is displayed, the user can enter the operand as usual.The statechart can be extended with two additional 'Negative Number' states. Notice that when  user selects an operator and enters state 4, it is possible to select a different operator and remain in state 4. However is the minus button is selected in state 4 then this indicates that a negative number is about to be entered and not that the operator has been changed.
+
+![screen shot 2017-09-20 at 15 43 34](https://user-images.githubusercontent.com/1120870/30650357-9534eb08-9e1a-11e7-8833-7cf6bf4a70dc.png)
