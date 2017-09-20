@@ -45,3 +45,59 @@ The statechart needs to be extended to include a result state. Alse, after a use
 The statechard can be extended to that shown below.
 
 ![screen shot 2017-09-20 at 15 50 48](https://user-images.githubusercontent.com/1120870/30650713-8d60b776-9e1b-11e7-9459-c12a52491178.png)
+
+In the version of the application given in chapter 3, if a user attempted to divide the first operand by zero then an alert message was displayed informing the user that division by zero is not allowed. A similar alert message can be made to appear by attaching an alert state to state 6. State 7 is entereed if the user attempts to divide the first operand by zero. Notice that this event takes priority over the events that lead from state 6 to state 4 or state 8.
+
+![screen shot 2017-09-20 at 16 01 22](https://user-images.githubusercontent.com/1120870/30651270-19567d82-9e1d-11e7-911f-c11a0776bd79.png)
+
+The cancel button can be clicked at any time and this will cause any operation being performed by the user to be abondoned and state 1 to be entered. An arrow attached to the outermost state will model this behaviour.
+
+![screen shot 2017-09-20 at 16 04 03](https://user-images.githubusercontent.com/1120870/30651352-60005ee2-9e1d-11e7-90a0-af44c3a1a436.png)
+
+The cancel entry button can be used to cancel the last operand entered. It does not cancel the last operator entered. Thus the button should only be enabled and available for use in states 2,3,5 and 6.
+
+
+<table>
+  <tr>
+    <td colspan="9">A</td>
+  </tr>
+  <tr>
+    <td align="center">User Interface Object</td>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+    <td>8</td>
+  </tr>
+  <tr>
+    <td align="left">CE (cancel entry)</td>
+    <td>d</td>
+    <td>e</td>
+    <td>e</td>
+    <td>d</td>
+    <td>e</td>
+    <td>e</td>
+    <td>-</td>
+    <td>d</td>
+  </tr>
+  <tr>
+    <td align="left">% button</td>
+    <td>d</td>
+    <td>d</td>
+    <td>e</td>
+    <td>d</td>
+    <td>d</td>
+    <td>d</td>
+    <td>-</td>
+    <td>e</td>
+  </tr>
+</table>
+
+
+|                        A               |
+| ---------------------- | ------------- |
+| User Interface Object  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| Content Cell  | Content Cell  |
