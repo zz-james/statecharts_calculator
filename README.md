@@ -1,3 +1,5 @@
+THIS IS A WORK IN PROGRESS WHICH I WILL FIX UP IN TIME
+
 In chapter 3, a calculator application was introduced which characterised the bottom up approach to user interface development.
 
 In this chapter, the same user interface objects will be used but the code that controls those objects will be designed using a statechart.
