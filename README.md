@@ -36,3 +36,12 @@ The statechart above assumes that the operands are positive numbers. It is possi
 After the minus sign is displayed, the user can enter the operand as usual.The statechart can be extended with two additional 'Negative Number' states. Notice that when  user selects an operator and enters state 4, it is possible to select a different operator and remain in state 4. However is the minus button is selected in state 4 then this indicates that a negative number is about to be entered and not that the operator has been changed.
 
 ![screen shot 2017-09-20 at 15 43 34](https://user-images.githubusercontent.com/1120870/30650357-9534eb08-9e1a-11e7-8833-7cf6bf4a70dc.png)
+
+When a user clicks the equals sign in state 6, the statechart enters the Start state again.
+
+However this is not quite the behaviour that is required because the user may wish to use the result of the calculation as the first operand in the next calculation. In which case, after a result is returned, the user will expect to click an operator button and then enter the second operand. 
+
+The statechart needs to be extended to include a result state. Alse, after a user has entered the second operand, it should be possible to enter another operator without pressing the equals button. In other words, it would be possible to enter a sequence such as 3 + 4 - 2 = .
+The statechard can be extended to that shown below.
+
+![screen shot 2017-09-20 at 15 50 48](https://user-images.githubusercontent.com/1120870/30650713-8d60b776-9e1b-11e7-9459-c12a52491178.png)
