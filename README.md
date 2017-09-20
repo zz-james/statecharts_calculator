@@ -27,3 +27,4 @@ After entering the second operant, the equals button can be clicked and the resu
 
 This is a simplistic view of the calculator.
 
+![screen shot 2017-09-20 at 15 32 17](https://user-images.githubusercontent.com/1120870/30649744-ff6a2170-9e18-11e7-98f9-f604ce6b5d41.png)
