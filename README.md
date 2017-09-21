@@ -75,29 +75,29 @@ The percent button divides the first operand by 100. It should only therefore be
   </tr>
   <tr>
     <td align="left">CE (cancel entry)</td>
-    <td>d</td>
-    <td>e</td>
-    <td>e</td>
-    <td>d</td>
-    <td>e</td>
-    <td>e</td>
+    <td>dis</td>
+    <td>en</td>
+    <td>en</td>
+    <td>dis</td>
+    <td>en</td>
+    <td>en</td>
     <td>-</td>
-    <td>d</td>
+    <td>dis</td>
   </tr>
   <tr>
     <td align="left">% button</td>
-    <td>d</td>
-    <td>d</td>
-    <td>e</td>
-    <td>d</td>
-    <td>d</td>
-    <td>d</td>
+    <td>dis</td>
+    <td>dis</td>
+    <td>en</td>
+    <td>dis</td>
+    <td>dis</td>
+    <td>dis</td>
     <td>-</td>
-    <td>e</td>
+    <td>en</td>
   </tr>
 </table>
 
-States 3 and 7 have lower levels of detail that control how a user can use the number buttons and decimal point buttons to ensure that they only enter valid operations. The statecharts for both states are very similar and are shown below.
+States 3 and 7 have lower levels of detail that control how a user can use the number buttons and decimal point buttons to ensure that they only enter valid operands. The statecharts for both states are very similar and are shown below.
 
 If a user clicks the zero button, then state 9 is entered. If the user clicks the zero button again then it has no effect.
 
