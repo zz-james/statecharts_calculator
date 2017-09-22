@@ -3,82 +3,69 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { createMachine } from 'redux-machine'
 
-import './index.css';
-import App from './App';
+/**
+ * this is a super naive implementation
+ * that has no real state heirarchy and
+ * uses the default clause on reducers 
+ * to handle shared 'outer' state actions
+ */
 
-ReactDOM.render(<App />, document.getElementById('root'));
 
 
-const startReducer = (state = {readout:'0'}, action) => {
+
+const startReducer = (state = {readout:'0', operator:''}, action) => {
   switch (action.type) {
     case 'ZERO':
       return Object.assign({},state,{
-        readout: '0',
         status: '3.OPERAND1.ZERO'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: action.value,
         status: '3.OPERAND1.BEFOREDECIMAL'
       })
     case 'MINUS':
       return Object.assign({},state,{
         status: '2.NEGATIVE.NUMBER'
       })
+    case 'POINT':
+      return Object.assign({},state,{
+        readout: state.readout+'.',
+        status: '3.OPERAND1.AFTERDECIMAL'
+      })
     default:
-      return state;
+      return outerState(state, action);
   }
 }
 
 const resultReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'FETCH_USERS':
+    case 'PLUS':
       return Object.assign({},state,{
-        error: null,
-        status: 'IN_PROGRESS'
+        operator: '+',
+        operand1: parseFloat(state.readout),
+        status: '4.OPERATORENTERED'
       })
+    case 'MINUS':
+      return Object.assign({},state,{
+        operator: '-',
+        operand1: parseFloat(state.readout),
+        status: '4.OPERATORENTERED'
+      })
+    case 'DIVIDE':
+      return Object.assign({},state,{
+        operator: '/',
+        operand1: parseFloat(state.readout),
+        status: '4.OPERATORENTERED'
+      })
+    case 'TIMES':
+      return Object.assign({},state,{
+        operator: '*',
+        operand1: parseFloat(state.readout),
+        status: '4.OPERATORENTERED'
+      })   
     default:
-      return state;
+      return outerState(state, action);
   }
 }
 
@@ -89,57 +76,21 @@ const negativeNumberReducer = (state = {}, action) => {
         readout: '0',
         status: '3.OPERAND1.ZERO'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: action.value,
         status: '3.OPERAND1.BEFOREDECIMAL'
       })
     case 'POINT':
       return Object.assign({},state,{
         status: '3.OPERAND1.AFTERDECIMAL'
       })
+    case 'CANCEL_ENTRY':
+      return Object.assign({},state,{
+        status: 'INIT'
+      })   
     default:
-      return state;
+      return outerState(state, action);
   }
 }
 
@@ -150,227 +101,37 @@ const negativeNumberReducer2 = (state = {}, action) => {
         readout: '0',
         status: '6.OPERAND2.ZERO'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: action.value,
         status: '6.OPERAND2.BEFOREDECIMAL'
       })
     case 'POINT':
       return Object.assign({},state,{
         status: '6.OPERAND2.AFTERDECIMAL'
       })
+    case 'CANCEL_ENTRY':
+      return Object.assign({},state,{
+        status: '4.OPERATORENTERED'
+      })  
     default:
-      return state;
+      return outerState(state, action);
   }
 }
+
+
+
 
 const zeroEnteredReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: action.value,
         status: '3.OPERAND1.BEFOREDECIMAL'
       })
     case 'POINT':
       return Object.assign({},state,{
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    default:
-      return state;
-  }
-}
-
-const beforeDecimalReducer = (state = {}, action) => {
-  switch (action.type) {
-    case 'ZERO':
-      return Object.assign({},state,{
-        readout: '0',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'ONE':
-      return Object.assign({},state,{
-        readout: '1',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
-        status: '3.OPERAND1.BEFOREDECIMAL'
-      })
-    case 'POINT':
-      return Object.assign({},state,{
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    default:
-      return state;
-  }
-}
-
-const afterDecimalReducer = (state = {}, action) => {
-  switch (action.type) {
-    case 'ZERO':
-      return Object.assign({},state,{
-        readout: '0',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'ONE':
-      return Object.assign({},state,{
-        readout: '1',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '3.OPERAND1.AFTERDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: state.readout+'.',
         status: '3.OPERAND1.AFTERDECIMAL'
       })
     default:
@@ -378,22 +139,67 @@ const afterDecimalReducer = (state = {}, action) => {
   }
 }
 
+const beforeDecimalReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ZERO':
+      return Object.assign({},state,{
+        readout: state.readout+'0',
+        status: '3.OPERAND1.BEFOREDECIMAL'
+      })
+    case 'NUMBER':
+      return Object.assign({},state,{
+        readout: state.readout+action.value,
+        status: '3.OPERAND1.BEFOREDECIMAL'
+      })
+    case 'POINT':
+      return Object.assign({},state,{
+        readout: state.readout+'.',
+        status: '3.OPERAND1.AFTERDECIMAL'
+      })
+    default:
+      return operand1Reducer(state, action);
+  }
+}
+
+const afterDecimalReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ZERO':
+      return Object.assign({},state,{
+        readout: state.readout+'0',
+        status: '3.OPERAND1.AFTERDECIMAL'
+      })
+    case 'NUMBER':
+      return Object.assign({},state,{
+        readout: state.readout+action.value,
+        status: '3.OPERAND1.AFTERDECIMAL'
+      })
+    default:
+      return operand1Reducer(state, action);
+  }
+}
+
+
+
 const operand1Reducer = (state = {}, action) => {
   switch (action.type) {
     case 'PLUS':
       return Object.assign({},state,{
+        operator: '+',
         status: '4.OPERATORENTERED'
       })
     case 'MINUS':
       return Object.assign({},state,{
+        operator: '-',
         status: '4.OPERATORENTERED'
       })
     case 'DIVIDE':
       return Object.assign({},state,{
+        operator: '/',
         status: '4.OPERATORENTERED'
       })
     case 'TIMES':
       return Object.assign({},state,{
+        operator: '*',
         status: '4.OPERATORENTERED'
       })   
     case 'CANCEL_ENTRY':
@@ -401,137 +207,73 @@ const operand1Reducer = (state = {}, action) => {
         status: 'INIT'
       })      
     default:
-      return state;
+      return outerState(state, action);
   }
 }
+
+
 
 const operatorEnteredReducer = (state = {}, action) => {
   switch (action.type) {
     case 'PLUS':
       return Object.assign({},state,{
+        operator: '+',
         status: '4.OPERATORENTERED'
       })
     case 'DIVIDE':
       return Object.assign({},state,{
+        operator: '/',
         status: '4.OPERATORENTERED'
       })
     case 'TIMES':
       return Object.assign({},state,{
+        operator: 'x',
         status: '4.OPERATORENTERED'
       })
     case 'MINUS':
       return Object.assign({},state,{
+        operator: '-',
         status: '5.NEGATIVE_NUMBER'
       })   
-      case 'ZERO':
+    case 'ZERO':
       return Object.assign({},state,{
+        operand1: parseFloat(state.readout),
         readout: '0',
-        status: '6.OPERAND2'
+        status: '6.OPERAND2.ZERO'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '6.OPERAND2'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '6.OPERAND2'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '6.OPERAND2'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '6.OPERAND2'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '6.OPERAND2'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '6.OPERAND2'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '6.OPERAND2'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '6.OPERAND2'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
-        status: '6.OPERAND2'
-      })
-    default:
-      return state;
-  }
-}
-
-
-const zeroEnteredReducer2 = (state = {}, action) => {
-  switch (action.type) {
-    case 'ONE':
-      return Object.assign({},state,{
-        readout: '1',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        operand1: parseFloat(state.readout),
+        readout: action.value,
         status: '6.OPERAND2.BEFOREDECIMAL'
       })
     case 'POINT':
       return Object.assign({},state,{
+        operand1: parseFloat(state.readout),
+        readout: '0.',
         status: '6.OPERAND2.AFTERDECIMAL'
       })
     default:
-      return state;
+      return outerState(state, action);
+  }
+}
+
+
+
+const zeroEnteredReducer2 = (state = {}, action) => {
+  switch (action.type) {
+    case 'NUMBER':
+      return Object.assign({},state,{
+        readout: state.readout+action.value,
+        status: '6.OPERAND2.BEFOREDECIMAL'
+      })
+    case 'POINT':
+      return Object.assign({},state,{
+        readout: state.readout+'.',
+        status: '6.OPERAND2.AFTERDECIMAL'
+      })
+    default:
+      return operand2Reducer(state, action);
   }
 }
 
@@ -539,60 +281,21 @@ const beforeDecimalReducer2 = (state = {}, action) => {
   switch (action.type) {
     case 'ZERO':
       return Object.assign({},state,{
-        readout: '0',
+        readout: state.readout+'0',
         status: '6.OPERAND2.BEFOREDECIMAL'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '6.OPERAND2.BEFOREDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: state.readout+action.value,
         status: '6.OPERAND2.BEFOREDECIMAL'
       })
     case 'POINT':
       return Object.assign({},state,{
+        readout: state.readout+'.',
         status: '6.OPERAND2.AFTERDECIMAL'
       })
     default:
-      return state;
+      return operand2Reducer(state, action);
   }
 }
 
@@ -600,52 +303,12 @@ const afterDecimalReducer2 = (state = {}, action) => {
   switch (action.type) {
     case 'ZERO':
       return Object.assign({},state,{
-        readout: '0',
+        readout: state.readout+'0',
         status: '6.OPERAND2.AFTERDECIMAL'
       })
-    case 'ONE':
+    case 'NUMBER':
       return Object.assign({},state,{
-        readout: '1',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'TWO':
-      return Object.assign({},state,{
-        readout: '2',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'THREE':
-      return Object.assign({},state,{
-        readout: '3',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'FOUR':
-      return Object.assign({},state,{
-        readout: '4',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'FIVE':
-      return Object.assign({},state,{
-        readout: '5',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'SIX':
-      return Object.assign({},state,{
-        readout: '6',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'SEVEN':
-      return Object.assign({},state,{
-        readout: '7',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'EIGHT':
-      return Object.assign({},state,{
-        readout: '8',
-        status: '6.OPERAND2.AFTERDECIMAL'
-      })
-    case 'NINE':
-      return Object.assign({},state,{
-        readout: '9',
+        readout: state.readout+action.value,
         status: '6.OPERAND2.AFTERDECIMAL'
       })
     default:
@@ -654,22 +317,36 @@ const afterDecimalReducer2 = (state = {}, action) => {
 }
 
 
+
+
 const operand2Reducer = (state = {}, action) => {
   switch (action.type) {
     case 'PLUS':
       return Object.assign({},state,{
+        operand2:parseFloat(state.readout),
+        readout: operators[state.operator](state.operand1, parseFloat(state.readout)),
+        operator: '+',
         status: '4.OPERATORENTERED'
       })
     case 'MINUS':
       return Object.assign({},state,{
+        operand2:parseFloat(state.readout),
+        readout: operators[state.operator](state.operand1, parseFloat(state.readout)),
+        operator: '-',
         status: '4.OPERATORENTERED'
       })
     case 'DIVIDE':
       return Object.assign({},state,{
+        operand2:parseFloat(state.readout),
+        readout: operators[state.operator](state.operand1, parseFloat(state.readout)),
+        operator: '/',
         status: '4.OPERATORENTERED'
       })
     case 'TIMES':
       return Object.assign({},state,{
+        operand2:parseFloat(state.readout),
+        readout: operators[state.operator](state.operand1, parseFloat(state.readout)),
+        operator: '*',
         status: '4.OPERATORENTERED'
       })   
     case 'CANCEL_ENTRY':
@@ -678,12 +355,26 @@ const operand2Reducer = (state = {}, action) => {
       })   
     case 'EQUALS':
       return Object.assign({},state,{
+        readout: operators[state.operator](state.operand1, parseFloat(state.readout)),
         status: '8.RESULT'
       })     
+    default:
+      return outerState(state, action);
+  }
+}
+
+const outerState = (state={}, action) => {
+  switch (action.type) {
+    case 'CANCEL':
+      return Object.assign({},state,{
+        readout: '0',
+        status: 'INIT'
+      }) 
     default:
       return state;
   }
 }
+
 
 const alertReducer = (state = {}, action) => {
   switch (action.type) {
@@ -701,14 +392,18 @@ const calculatorReducer = createMachine({
   'INIT':startReducer,
   '8.RESULT':resultReducer,
   '2.NEGATIVE.NUMBER':negativeNumberReducer,
+
   '3.OPERAND1.ZERO':zeroEnteredReducer,
   '3.OPERAND1.BEFOREDECIMAL':beforeDecimalReducer,
   '3.OPERAND1.AFTERDECIMAL': afterDecimalReducer,
+
   '4.OPERATORENTERED':operatorEnteredReducer,
   '5.NEGATIVE_NUMBER':negativeNumberReducer2,
+
   '6.OPERAND2.ZERO':zeroEnteredReducer2,
   '6.OPERAND2.BEFOREDECIMAL':beforeDecimalReducer2,
   '6.OPERAND2.AFTERDECIMAL':afterDecimalReducer2,
+
   '7.ALERT':alertReducer
 });
 
@@ -718,63 +413,18 @@ var store = createStore(calculatorReducer);
 // digit button actions
 const zero = () => {
   store.dispatch({
-    type:'ZERO'
+    type:'ZERO',
+    value: 0
   })
 };
 
-const one = () => {
+const number = (i) => {
   store.dispatch({
-    type: 'ONE'
+    type: 'NUMBER',
+    value: i+'' // cast to string
   })
 }
 
-const two = () => {
-  store.dispatch({
-    type: 'TWO'
-  })
-}
-
-const three = () => {
-  store.dispatch({
-    type: 'THREE'
-  })
-}
-
-const four = () => {
-  store.dispatch({
-    type: 'FOUR'
-  })
-}
-
-const five = () => {
-  store.dispatch({
-    type: 'FIVE'
-  })
-}
-
-const six = () => {
-  store.dispatch({
-    type: 'SIX'
-  })
-}
-
-const seven = () => {
-  store.dispatch({
-    type: 'SEVEN'
-  })
-}
-
-const eight = () => {
-  store.dispatch({
-    type: 'EIGHT'
-  })
-}
-
-const nine = () => {
-  store.dispatch({
-    type: 'NINE'
-  })
-}
 
 // operation button actions
 const plus = () => {
@@ -827,13 +477,53 @@ const cancelEntry = () => {
   })
 }
 
+// some maths
+// eg
+// var key = '+';
+// var c = operators[key](3, 5);
+var operators = {
+  '+': function(a, b){ return a+b},
+  '-': function(a, b){ return a-b},
+  '*': function(a, b){ return a*b},
+  '/': function(a, b){ return a/b}
+}
 
-store.subscribe(()=>{
-  console.log('the store is', store.getState());
-})
 
-zero();
-three();
-point();
-six();
-plus();
+const render = () => {
+  ReactDOM.render(
+    <div>
+      <div style={{border: "1px solid black"}}>
+        {store.getState().readout}
+        <span style={{float:"right",background:"grey"}}>{"| "+store.getState().operator+" |"}</span>  
+      </div><br />
+      <button onClick={()=>number(1)}>1</button>
+      <button onClick={()=>number(2)}>2</button>
+      <button onClick={()=>number(3)}>3</button><br />
+      <button onClick={()=>number(4)}>4</button>
+      <button onClick={()=>number(5)}>5</button>
+      <button onClick={()=>number(6)}>6</button><br />
+      <button onClick={()=>number(7)}>7</button>
+      <button onClick={()=>number(8)}>8</button>
+      <button onClick={()=>number(9)}>9</button><br />
+      <button onClick={zero}>0</button>
+      <button onClick={point}>.</button>
+      <button onClick={times}>*</button><br />
+      <button onClick={divide}>/</button>
+      <button onClick={plus}>+</button>
+      <button onClick={minus}>-</button><br />
+      <button onClick={equals}>=</button>
+      <button onClick={cancel}>C</button>
+      <button onClick={cancelEntry}>CE</button>
+      <button onClick={percent}>%</button>
+    </div>, 
+    document.getElementById('root')
+  );
+  console.log('the store is', store.getState());  
+}
+
+
+
+store.subscribe(render)
+
+render();
+
