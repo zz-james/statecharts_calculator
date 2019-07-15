@@ -50,7 +50,7 @@ In the version of the application given in chapter 3, if a user attempted to div
 
 ![screen shot 2017-09-20 at 16 01 22](https://user-images.githubusercontent.com/1120870/30651270-19567d82-9e1d-11e7-911f-c11a0776bd79.png)
 
-The cancel button can be clicked at any time and this will cause any operation being performed by the user to be abondoned and state 1 to be entered. An arrow attached to the outermost state will model this behaviour.
+The cancel button can be clicked at any time and this will cause any operation being performed by the user to be abandoned and state 1 to be entered. An arrow attached to the outermost state will model this behaviour.
 
 ![screen shot 2017-09-20 at 16 04 03](https://user-images.githubusercontent.com/1120870/30651352-60005ee2-9e1d-11e7-90a0-af44c3a1a436.png)
 
